@@ -1,10 +1,14 @@
-#ifndef EVALUATION_HPP
-#define EVALUATION_HPP
+include/evaluation.hpp 
+  #ifndef EVALUATION_HPP 
+  #define EVALUATION_HPP 
 
-#include <vector>
-#include <cstddef>
+  #include <vector>
+  #include<cstddef>
 
-std::size_t cluster_count(const std::vector<std::size_t>& labels);
+  class ClusterEvaluator {
+  public:
+static std::size_t cluster_count(const std::vector<std::size_t>& labels);
+};
 
 #endif
 
