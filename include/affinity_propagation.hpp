@@ -20,7 +20,17 @@ Matrix availabities;
 std::size_t iterations = 0;
 bool converged = false;
 };
+class AffinityPropagation {
+private:
+    APConfig config_;
 
-std::vector<std::size_t> find_exemplars(const Matrix& a,const Matrix& r);
-APResult run_affinity_propagation(const Dataset& data, const APConfig& config);
-#endif;
+    static std::vector<std::size_t> find_exemplars(const Matrix& a, const Matrix& r);
+    static bool same_vector(const std::vector<std::size_t>& v1, const std::vector<std::size_t>& v2);
+
+public:
+    explicit AffinityPropagation(APConfig config);
+    APResult run(const Dataset& data);
+};
+
+#endif
+
