@@ -1,24 +1,34 @@
 
+
 #ifndef DATASET_HPP
 #define DATASET_HPP
-
 #include <vector>
 #include <string>
 #include <cstddef>
 
-using Matrix = std::vector<std::vector<double>>;
+using Matrix =
+std::vector<std::vector<double>>;
 
-struct Dataset{
-Matrix values;
-std::vector<std::string> column_names;
-std::size_t rows() const noexcept{
-  return values.size();
-}
-std::size_t cols() const noexcept{
-  return values.empty() ? 0 : values.front().size();
-}
+class Dataset {
+private:
+    Matrix values_;
+    std::vector<std::string> column_names_;
+
+public:
+    Dataset() = default;
+    Dataset(Matrix values,
+std::vector<std::string> column_names =
+{});
+
+    std::size_t rows() const noexcept;
+    std::size_t cols() const noexcept;
+
+    const Matrix& get_values() const
+noexcept;
+    void set_values(const Matrix& values);
+    const std::vector<std::string>&
+get_column_names() const noexcept;
+    void validate() const;
+    Dataset standardize() const;
 };
-void validate_dataset(const Dataset& data);
-Dataset standardize(const Dataset& data);
-
 #endif
