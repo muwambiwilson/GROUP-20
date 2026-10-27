@@ -1,1 +1,18 @@
+# Build directories
+build/
+bin/
+out/
 
+# Compiled objects and binaries
+*.o
+*.obj
+*.exe
+*.out
+app
+
+# IDE specific files
+.vscode/
+.idea/
+*.suo
+*.vcxproj
+*.vcxproj.filters
