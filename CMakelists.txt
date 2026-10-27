@@ -1,1 +1,22 @@
+cmake_minimum_required(VERSION 3.12)
+project(AffinityPropagationApp CXX)
 
+# Require C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Define source files explicitly or locate them using globbing
+set(SOURCES
+    src/dataset.cpp
+    src/similarity.cpp
+    src/affinity_propagation.cpp
+    src/evaluation.cpp
+    main.cpp
+)
+
+# Create the executable target
+add_executable(app ${SOURCES})
+
+# Specify the include directory path
+target_include_directories(app PRIVATE include)
