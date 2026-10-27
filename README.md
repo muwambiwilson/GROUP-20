@@ -43,3 +43,23 @@ KASOZI BAIHAKI            25/U/0834       BELE
 ​AffinityPropagation (affinity_propagation.hpp / affinity_propagation.cpp): Manages the core iterative message-passing loop. It updates responsiveness and availability matrices using configurable damping factors, maximum iteration caps, and convergence checks.
 ​ClusterEvaluator (evaluation.hpp / evaluation.cpp): Provides utility functions to analyze the resulting cluster labels, such as counting the total number of unique clusters identified.
 ​main.cpp / examples/: Demonstrates how to configure the algorithm (APConfig), pass sample datasets, run the optimization workflow, and print out execution metrics.
+## Build and Run the Example
+
+From the project root, configure and build the example target:
+
+```powershell
+cmake -S . -B build
+cmake --build build --target run_example
+.\build\run_example.exe
+```
+
+The existing `app` target remains available for `main.cpp`.
+
+## Build and Run Tests
+
+Build the test executables and run them through CTest:
+
+```powershell
+cmake --build build --target test_dataset test_similarity test_affinity_propagation test_evaluation
+ctest --test-dir build --output-on-failure
+```
