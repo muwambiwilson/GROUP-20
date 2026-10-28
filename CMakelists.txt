@@ -1,1 +1,46 @@
+cmake_minimum_required(VERSION 3.12)
+project(AffinityPropagationApp LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Build the reusable library
+add_library(affinity_propagation
+    src/dataset.cpp
+    src/similarity.cpp
+    src/affinity_propagation.cpp
+    src/evaluation.cpp
+)
+
+target_include_directories(affinity_propagation
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+# Main application
+add_executable(app main.cpp)
+target_link_libraries(app PRIVATE affinity_propagation)
+
+# Examples
+add_executable(run_example examples/run_example.cpp)
+target_link_libraries(run_example PRIVATE affinity_propagation)
+
+add_executable(run_csv examples/run_csv.cpp)
+target_link_libraries(run_csv PRIVATE affinity_propagation)
+
+# Tests
+enable_testing()
+
+function(add_project_test target source)
+    add_executable(${target} ${source})
+    target_include_directories(${target} PRIVATE tests)
+    target_link_libraries(${target} PRIVATE affinity_propagation)
+    add_test(NAME ${target} COMMAND ${target})
+endfunction()
+
+add_project_test(test_dataset tests/test_dataset.cpp)
+add_project_test(test_similarity tests/test_similarity.cpp)
+add_project_test(test_affinity_propagation
+    tests/test_affinity_propagation.cpp
+)
+add_project_test(test_evaluation "tests/test evaluation.cpp")
