@@ -1,1 +1,42 @@
+cmake_minimum_required(VERSION 3.12)
+project(AffinityPropagationApp CXX)
 
+# Require C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Define source files explicitly or locate them using globbing
+set(LIBRARY_SOURCES
+    src/dataset.cpp
+    src/similarity.cpp
+    src/affinity_propagation.cpp
+    src/evaluation.cpp
+)
+
+set(SOURCES
+    ${LIBRARY_SOURCES}
+    main.cpp
+)
+
+add_executable(app ${SOURCES})
+target_include_directories(app PRIVATE include)
+
+add_executable(run_example examples/run_example.cpp ${LIBRARY_SOURCES})
+target_include_directories(run_example PRIVATE include)
+
+add_executable(run_csv examples/run_csv.cpp ${LIBRARY_SOURCES})
+target_include_directories(run_csv PRIVATE include)
+
+enable_testing()
+
+function(add_project_test target source)
+    add_executable(${target} ${source} ${LIBRARY_SOURCES})
+    target_include_directories(${target} PRIVATE include tests)
+    add_test(NAME ${target} COMMAND ${target})
+endfunction()
+
+add_project_test(test_dataset tests/test_dataset.cpp)
+add_project_test(test_similarity tests/test_similarity.cpp)
+add_project_test(test_affinity_propagation tests/test_affinity_propagation.cpp)
+add_project_test(test_evaluation "tests/test evaluation.cpp")
