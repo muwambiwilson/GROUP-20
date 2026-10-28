@@ -47,19 +47,15 @@ KASOZI BAIHAKI            25/U/0834       BELE
 
 From the project root, configure and build the example target:
 
-```powershell
+powershell
 cmake -S . -B build
 cmake --build build --target run_example
 .\build\run_example.exe
-```
 
 The existing `app` target remains available for `main.cpp`.
-
-## Build and Run Tests
-
+Build and Run Tests
 Build the test executables and run them through CTest:
-
-```powershell
+powershell
 cmake --build build --target test_dataset test_similarity test_affinity_propagation test_evaluation
 ctest --test-dir build --output-on-failure
-```
+
