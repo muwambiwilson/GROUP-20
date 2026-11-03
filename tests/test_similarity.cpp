@@ -1,4 +1,4 @@
-#include "affinity_propagation/similarity.hpp"
+#include "similarity.hpp"
 #include "test_helpers.hpp"
 
 int main() {
