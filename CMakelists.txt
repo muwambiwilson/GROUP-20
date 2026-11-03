@@ -18,7 +18,7 @@ target_include_directories(affinity_propagation
 )
 
 # Main application
-add_executable(app main.cpp)
+add_executable(app main/main.cpp)
 target_link_libraries(app PRIVATE affinity_propagation)
 
 # Examples
@@ -43,4 +43,4 @@ add_project_test(test_similarity tests/test_similarity.cpp)
 add_project_test(test_affinity_propagation
     tests/test_affinity_propagation.cpp
 )
-add_project_test(test_evaluation "tests/test evaluation.cpp")
+add_project_test(test_evaluation "tests/test_evaluation.cpp")
