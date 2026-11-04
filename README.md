@@ -26,15 +26,15 @@ project/
 └── tests/
     └── unit_tests.cpp
     
-### GROUP MEMBERS
+### GROUP MEMBERS          REG NO        COURSE     CONTRIBUTIONS
     
-NAKIRANDHA MARTHA TENDO   25/U/08763/PS   BCCE
-NANDERA DOROTHY           25/U/0850       BELE 
-KASAGGA FRANCIS           25/U/0833       BELE 
-MUWAMBI WILSON            25/U/0842       BELE
-NAKAZIBWE SHIFRAH         25/U/05326/PS   BCCE
-MATISKO ARON              25/U/25056      BELE
-KASOZI BAIHAKI            25/U/0834       BELE
+NAKIRANDHA MARTHA TENDO   25/U/08763/PS   BCCE     similarity.cpp,similarity.hpp and dataset.hpp
+NANDERA DOROTHY           25/U/0850       BELE     affinity_propagation.cpp and test_similarity.cpp
+KASAGGA FRANCIS           25/U/0833       BELE     main.cpp and test_evaluation.cpp 
+MUWAMBI WILSON            25/U/0842       BELE     dataset.cpp and deburging
+NAKAZIBWE SHIFRAH         25/U/05326/PS   BCCE     evaluation.cpp and cmakelists
+MATISKO ARON              25/U/25056      BELE     affinity_propagation.hpp and test_dataset.cpp
+KASOZI BAIHAKI            25/U/0834       BELE     evaluation.cpp,test_helpers.hpp and runexample.cpp
 ### What the Code Does
 ​This project implements the Affinity Propagation clustering algorithm using a modular, object-oriented design in C++17. Unlike traditional partitioning algorithms (like K-Means) that require you to pre-specify the number of clusters, Affinity Propagation evaluates all data points as potential cluster centers (exemplars) simultaneously and passes messages between them until stable clusters emerge.
 ​The architecture is divided into clear, single-responsibility components:
