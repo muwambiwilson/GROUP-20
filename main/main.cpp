@@ -27,7 +27,7 @@ int main(){
     std::cout<<"\n --- Execution Output ---"<<std::endl;
     std::cout<<"Converged:"<<(result.converged?"Yes":"No")<<std::endl;
     std::cout<<"Total Iterations:"<<result.iterations<<std::endl;
-    std::cout<<"Number of Clusters Identified:"<<cluster_count(result.labels)<<std::endl;
+    std::cout<<"Number of Clusters Identified:"<<ClusterEvaluator::cluster_count(result.labels)<<std::endl;
 
     return 0;
 } 
