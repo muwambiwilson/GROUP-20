@@ -1,0 +1,2 @@
+C:\msys64\ucrt64\bin\ar.exe qc libaffinity_propagation.a CMakeFiles/affinity_propagation.dir/src/dataset.cpp.obj CMakeFiles/affinity_propagation.dir/src/similarity.cpp.obj CMakeFiles/affinity_propagation.dir/src/affinity_propagation.cpp.obj CMakeFiles/affinity_propagation.dir/src/evaluation.cpp.obj
+C:\msys64\ucrt64\bin\ranlib.exe libaffinity_propagation.a
