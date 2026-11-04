@@ -1,5 +1,0 @@
-test_dataset 2 0.0205138
-test_similarity 2 0.0172432
-test_affinity_propagation 2 0.017549
-test_evaluation 2 0.0250272
----
