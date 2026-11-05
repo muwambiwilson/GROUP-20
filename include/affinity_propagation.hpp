@@ -16,7 +16,7 @@ std::vector<std::size_t> exemplars;
 std::vector<std::size_t> labels;
 Matrix similarity;
 Matrix responsibilities;
-Matrix availabities;
+Matrix availabilities;
 std::size_t iterations = 0;
 bool converged = false;
 };
