@@ -1,1 +1,472 @@
+GROUP 20
+AFFINITY PROPAGATION CLUSTERING USING C++
+TECHNICAL PROJECT DOCUMENTATION
+Programming Language: C++
+C++ Standard: C++17
+Project: Affinity Propagation Clustering Algorithm
+
+ABSTRACT
+This project focuses on the implementation of the Affinity Propagation clustering algorithm using the C++ programming language.
+Clustering is a technique in machine learning used to group data points according to their similarities. Unlike some clustering algorithms that require the number of clusters to be specified before running, Affinity Propagation identifies suitable representatives, known as exemplars, through a process of message passing between data points.
+The project implements the main stages of the algorithm, including dataset preparation, similarity calculation, preference initialization, responsibility updates, availability updates, exemplar selection and cluster assignment.
+The program is organized into different classes and modules to make it easier to understand, maintain, test and reuse. C++17 is used, together with CMake for project configuration and building.
+The project also includes example programs and automated tests to demonstrate and check the functionality of the implementation.
+
+1. INTRODUCTION
+1.1 Background
+In many real-life situations, we deal with large amounts of data that need to be organized into meaningful groups.
+For example:
+	Customers can be grouped according to their shopping behavior.
+	Students can be grouped according to similarities in their academic performance.
+	Documents can be grouped according to their content.
+	Images can be grouped according to their features.
+This process is called clustering.
+Clustering is an unsupervised machine learning technique. This means that the algorithm works with data that does not already have predefined class labels.
+One of the algorithms used for clustering is Affinity Propagation.
+Affinity Propagation works by allowing data points to exchange information about which points are suitable representatives of clusters. The selected representatives are called exemplars.
+In this project, we implemented Affinity Propagation using C++17 and organized the program into different modules to make the code easier to manage and understand.
+1.2 Problem Statement
+Organizing large datasets into meaningful groups can be difficult, especially when the number of groups is not known beforehand.
+Some clustering algorithms require the user to specify the number of clusters before execution. This may be difficult when working with unfamiliar datasets.
+Affinity Propagation provides an alternative approach by identifying representative data points through message passing.
+The aim of this project is to develop a C++ program that implements the Affinity Propagation algorithm and can process numerical datasets, identify clusters and produce cluster assignments.
+1.3 Main Objective
+To design and implement the Affinity Propagation clustering algorithm using C++17.
+1.4 Specific Objectives
+The project aims to:
+	Implement a system for storing and managing numerical datasets.
+	Validate input data before processing.
+	Calculate similarity scores between data points.
+	Implement responsibility and availability message updates.
+	Apply damping to stabilize message updates.
+	Identify suitable exemplars.
+	Assign data points to their respective clusters.
+	Evaluate the number of clusters produced.
+	Organize the implementation into reusable C++ classes.
+	Test the functionality of the different project modules.
+1.5 Scope of the Project
+The project focuses on the implementation of Affinity Propagation for numerical datasets.
+It covers:
+	Dataset management and validation.
+	Feature standardization.
+	Similarity calculation.
+	Preference initialization.
+	Responsibility and availability updates.
+	Damping.
+	Exemplar selection.
+	Convergence checking.
+	Cluster assignment.
+	Basic cluster evaluation.
+	Testing and example execution.
+The implementation is written in C++17 and uses CMake as its build system.
+
+2. UNDERSTANDING THE AFFINITY PROPAGATION ALGORITHM
+2.1 What is Affinity Propagation?
+Affinity Propagation is an unsupervised clustering algorithm that groups data points based on their similarities.
+The algorithm identifies representative data points called exemplars.
+An exemplar is an actual data point selected to represent a particular cluster.
+Unlike algorithms such as K-means, Affinity Propagation does not require the user to specify the exact number of clusters before execution.
+Instead, it uses two types of messages:
+	Responsibility messages.
+	Availability messages.
+These messages are repeatedly updated until the algorithm reaches convergence or the maximum number of iterations is reached.
+2.2 Important Terms Used in the Algorithm
+Term	Explanation
+Data point	An individual observation in a dataset.
+Feature	A property or characteristic describing a data point.
+Similarity	A numerical value indicating how similar two data points are.
+Exemplar	A data point selected to represent a cluster.
+Responsibility	A message indicating how strongly one point favours another point as its exemplar.
+Availability	A message indicating how suitable a candidate point is to become an exemplar based on support from other points.
+Damping	A technique used to smooth message updates and reduce oscillations.
+Convergence	A condition where the selected exemplars remain unchanged for a specified number of iterations.
+2.3 General Working Principle
+The Affinity Propagation algorithm follows these main stages:
+	Prepare and validate the dataset.
+	Standardize the dataset.
+	Calculate similarities between data points.
+	Initialize preferences.
+	Initialize responsibility and availability matrices.
+	Update responsibility messages.
+	Update availability messages.
+	Apply damping.
+	Identify exemplars.
+	Check convergence.
+	Assign data points to clusters.
+The process is repeated until the stopping condition is satisfied.
+
+3. MATHEMATICAL IMPLEMENTATION OF THE ALGORITHM
+This section explains the main mathematical operations used in our implementation.
+3.1 Dataset Standardization
+Before calculating similarities, the dataset can be standardized.
+Standardization is used to put different features on a comparable scale.
+For example, suppose a dataset contains two features:
+	Age, which may range from 18 to 60.
+	Income, which may range from 100,000 to 5,000,000.
+Income has much larger numerical values than age. Without standardization, it may have a much greater influence on the distance calculation.
+The standardization formula is:
+z=(x-μ)/σ
+Where:
+	x = original data value
+	μ = mean of the feature
+	σ = standard deviation
+	z = standardized value
+
+The mean is calculated as;
+μ=(∑_(i=1)^n▒x_i )/n
+The standard deviation is;
+σ=√((∑_(i=1)^n▒(x_i-μ)^2 )/n)
+If a feature has zero standard deviation, all its values are identical. Dividing by zero would cause an error. Our implementation handles this case by setting the standardized values of that feature to zero.
+
+3.2 Similarity Calculation
+After preparing the dataset, the algorithm calculates the similarity between data points.
+Our implementation uses negative squared Euclidean distance.
+The formula is:
+s(i,k)=-∑_(j=1)^d▒(x_ij-x_kj )^2 
+Where;
+	s(i,k) = similarity between data points I and k
+	x_ij = feature j of data point i
+	x_kj = feature j of data point k
+	d = number of features
+
+Worked example
+Suppose we have 2 data points
+A=(0,0)
+B=(3,4)
+Calculating the squared Euclidean distance
+D=(0-3)^2+(0-4)^2
+D=9+16
+D=25
+Therefore, the similarity is;
+s(A,B)=-25
+If two points are identical, their squared distance is zero and their similarity is zero.
+The similarity matrix stores the similarity values between pairs of data points.
+
+3.3 Preference Initialization
+In Affinity Propagation, every data point is considered a possible exemplar.
+The preference value represents how suitable a data point is to become an exemplar.
+The preference values are placed along the diagonal of the similarity matrix.
+
+Our implementation supports two approaches:
+	A preference value supplied through the configuration.
+	Automatic preference initialization using the median of the off-diagonal similarity values.
+
+When no preference is supplied, the implementation uses the median off-diagonal similarity.
+Preference influences the number of exemplars selected by the algorithm.
+Generally, higher preferences make it easier for points to become exemplars, while lower preferences make it harder.
+
+3.4 Responsibility Updates
+Responsibility messages indicate how strongly a data point supports another point as its exemplar compared with other possible candidates.
+The responsibility formula is:
+r(i,k)=s(i,k)-max┬(k'≠k)⁡{a(i,k')+s(i,k')}
+Where;
+	r(i,k) = responsibility from point i to candidate exemplar k
+	s(i,k) = similarity between points i and k
+	a(i,k') = availability message
+	k' = another possible exemplar.
+The implementation calculates the largest and second-largest availability-plus-similarity values to perform the responsibility updates efficiently.
+
+3.5 Availability Updates
+Availability messages indicate how much support a candidate exemplar receives from other data points.
+The algorithm considers positive responsibility values from other points when calculating support.
+For different points, where I is not equal to k;
+a(i,k)=min⁡(0,r(k,k)+∑_(i'≠i,k)▒max⁡(0,r(i',k)) )
+For the diagonal entries, where I = k;
+a(k,k)=∑_(i'≠k)▒max⁡(0,r(i',k)) 
+3.6 Damping
+During message passing, the values may change too quickly or oscillate.
+To reduce this problem, Affinity Propagation uses damping.
+The damping formula is;
+New=λ(Old)+(1-λ)(Raw)
+Where;
+	λ = damping factor.
+	Old = previous message value.
+	Raw = newly calculated message value.
+	New = updated message value.
+For example, if the damping factor is 0.7:
+New=0.7(Old)+0.3(Raw)
+This means that 70% of the previous value is retained, while 30% of the newly calculated value is included.
+Damping helps make the updates more stable.
+3.7 Exemplar Selection
+After updating the responsibility and availability matrices, the algorithm determines which data points should become exemplars.
+A data point k is selected as an exemplar when:
+a(k,k)+r(k,k)>0
+Where:
+	a(k,k) is the diagonal availability.
+	r(k,k) is the diagonal responsibility
+If the sum is positive, the point is considered suitable to represent a cluster.
+
+3.8 Convergence Checking
+Convergence occurs when the selected exemplars remain unchanged for a specified number of consecutive iterations.
+Our implementation compares the current exemplar list with the previous list.
+If the list remains unchanged for the number of iterations specified in the configuration, the algorithm marks the result as converged.
+However, if the maximum number of iterations is reached before convergence, the algorithm stops without marking the result as converged.
+This prevents the program from running indefinitely.
+3.9 Cluster Assignment
+After selecting the exemplars, the algorithm assigns each data point to the most suitable exemplar.
+It compares the similarity of a data point to all selected exemplars.
+The point is assigned to the exemplar with the highest similarity.
+The resulting cluster labels identify the exemplar associated with each data point.
+Finally, the ClusterEvaluator class counts the number of distinct cluster labels to determine the number of clusters.
+
+4. PROJECT STRUCTURE AND ORGANISATION
+The project is organized into different directories and files to separate the responsibilities of the program.
+The main idea is to make the implementation easier to understand, maintain, test and extend.
+4.1 Project Directory Structure
+The project contains the following main components:
+ 
+
+4.2 Explanation of the Directories
+A. Include Directory
+The include directory contains header files.
+Header files contain declarations of classes, structures and functions that can be used by other parts of the program.
+The project includes:
+	dataset.hpp
+	similarity.hpp
+	affinity_propagation.hpp
+	evaluation.hpp
+B. Source Directory
+The src directory contains the actual implementation of the functions and classes declared in the header files.
+It includes:
+	dataset.cpp
+	similarity.cpp
+	affinity_propagation.cpp
+	evaluation.cpp
+C. Examples Directory
+The examples directory contains example programs that demonstrate how the implemented functionality can be used.
+It includes:
+	run_example.cpp
+	run_csv.cpp
+The example programs help demonstrate how a dataset is supplied to the algorithm and how clustering results are obtained.
+D. Main Directory
+The main directory contains the main application entry point.
+The main.cpp file is responsible for starting the application.
+E. Tests Directory
+The tests directory contains automated tests used to check the functionality of different modules.
+The tests help identify errors and confirm that important operations behave as expected.
+F. CMakeLists.txt
+This file contains the build configuration for the project.
+It specifies information such as:
+	The project name.
+	The C++ standard.
+	Source files required for compilation.
+	Executable targets.
+	Test configuration.
+The project uses CMake and C++17.
+5. EXPLANATION OF THE MAIN CLASSES
+The project uses object-oriented programming to divide the implementation into different classes.
+Each class has a particular responsibility.
+5.1 Dataset Class
+The Dataset class is responsible for managing the numerical data used by the clustering algorithm.
+Its main responsibilities include:
+	Storing the dataset.
+	Storing column names where provided.
+	Returning the number of rows.
+	Returning the number of columns.
+	Accessing the dataset values.
+	Validating the dataset.
+	Standardizing the dataset.
+Some of the functions associated with this class include:
+Function	Purpose
+get_values()	Returns the dataset values.
+set_values()	Updates the stored values.
+get_column_names()	Returns the column names.
+validate()	Checks whether the dataset is valid.
+standardize()	Standardizes  the numerical features.
+The Dataset class ensures that the data is properly prepared before it is passed to the clustering algorithm.
+5.2 Similarity Calculator Class
+The SimilarityCalculator class is responsible for calculating similarity values between data points.
+It contains functions used for:
+	Calculating negative squared Euclidean similarity.
+	Finding the median of off-diagonal similarity values.
+	Initializing the preference values.
+Some of its functions include:
+Function	Purpose
+negative_squared_euclidean()	Calculates similarity between two data points.
+median_off_diagonal()	Calculates the median of off-diagonal similarity values.
+initialize_preferences()	Initialises the preference values.
+Separating similarity calculations into their own class makes the program easier to organize and reuse.
+5.3 AffinityPropagation Class
+This is the main class responsible for implementing the Affinity Propagation algorithm.
+It performs the main clustering operations, including:
+	Preparing the similarity matrix.
+	Initialising responsibility and availability matrices.
+	Updating responsibility messages.
+	Updating availability messages.
+	Applying damping.
+	Selecting exemplars.
+	Checking convergence.
+	Assigning data points to clusters.
+The main function is:
+run()
+This function executes the clustering process and returns the clustering results.
+Other helper functions include:
+	find_exemplars()
+	same_vector()
+The find_exemplars() function identifies the points that satisfy the exemplar selection condition.
+The same_vector() function helps compare exemplar lists when checking convergence.
+5.4 ClusterEvaluator Class
+The ClusterEvaluator class is responsible for basic evaluation of the clustering results.
+Its main function is:
+cluster_count()
+This function counts the number of unique cluster labels.
+It uses an unordered_set to store unique labels, ensuring that repeated labels are counted only once.
+5.5 APConfig Structure
+APConfig stores the configuration settings used by the Affinity Propagation algorithm.
+These settings include:
+Parameter	Purpose
+damping	Controls the damping factor used during message updates.
+max_iterations	Specifies the maximum number of iterations.
+convergence_iterations	Specifies how many consecutive unchanged exemplar checks are required for convergence.
+preference	An optional preference value supplied by the user.
+The use of a configuration structure makes it easier to change the algorithm settings without modifying the main algorithm implementation.
+5.6 APResult Structure
+APResult stores the results produced by the clustering algorithm.
+It includes:
+	Selected exemplars.
+	Cluster labels.
+	Similarity matrix.
+	Responsibility matrix.
+	Availability matrix.
+	Number of iterations performed.
+	Convergence status.
+This allows the program to return both the final clustering information and useful intermediate results.
+6. DESIGN DECISIONS
+During implementation, different design decisions were made to improve the organisation and functionality of the project.
+6.1 Use of Object-Oriented Programming
+The project uses separate classes to perform different tasks.
+For example, the Dataset class handles data management, while the AffinityPropagation class handles clustering.
+This prevents the entire program from being placed in one large file or class.
+6.2 Separation of Header and Source Files
+Header files contain declarations, while source files contain implementations.
+This makes it easier to understand what each module provides without having to read all its implementation details.
+It also supports code reuse.
+6.3 Use of C++17
+The project uses C++17 as its required C++ standard.
+One useful feature is std::optional, which is used for configuration values that may or may not be provided.
+For example, the preference value can be supplied by the user or left unset so that the implementation uses its default calculation.
+6.4 Use of Matrices
+Affinity Propagation requires several matrices to store information about relationships between data points.
+The project uses nested vectors to represent matrices such as:
+	Similarity matrix.
+	Responsibility matrix.
+	Availability matrix.
+This allows the algorithm to access and update values for different pairs of data points.
+6.5 Use of Damping
+Damping was included to reduce instability during message updates.
+Without damping, message values may change too quickly and cause oscillations.
+6.6 Use of Automated Tests
+Separate test files were created for different modules.
+This makes it easier to identify which part of the program has a problem when a test fails.
+6.7 Use of CMake
+CMake was selected to organize the build process.
+It allows the project to be configured and compiled without manually compiling every source file individually.
+7. TESTING AND VALIDATION
+Testing is important because it helps determine whether the implemented functions behave as expected.
+The project contains different test files for the major components.
+7.1 Dataset Tests
+File: test_dataset.cpp
+These tests check:
+	Dataset dimensions.
+	Standardization.
+	Handling of constant feature columns.
+	Empty datasets.
+	Datasets containing rows with unequal lengths.
+The purpose is to ensure that the Dataset class can correctly manage and validate input data.
+7.2 Similarity Tests
+File: test_similarity.cpp
+These tests check:
+	Correct calculation of negative squared Euclidean similarity.
+	Symmetry of similarity values.
+	Correct preference initialization.
+For example, the similarity between two points should be the same regardless of the order in which the points are considered when using the implemented distance formula.
+7.3 Affinity Propagation Tests
+File: test_affinity_propagation.cpp
+These tests check:
+	Execution of the clustering algorithm.
+	Clustering of a small sample dataset containing two groups.
+	Exemplar selection.
+	Cluster labels.
+	Convergence.
+	Handling of invalid input.
+These tests help confirm that the main algorithm can execute and produce clustering results for the tested cases.
+7.4 Evaluation Tests
+File: test_evaluation.cpp
+These tests check whether the program correctly counts the number of unique cluster labels.
+Examples include:
+	A dataset containing multiple clusters.
+	A dataset containing only one cluster.
+	A dataset where every label is different.
+	An empty set of labels.
+7.5 Test Helper Functions
+File: test_helpers.hpp
+This file contains simple helper macros used by the tests.
+These include:
+Macro	Purpose
+CHECK	Checks whether a condition is true.
+CHECK_NEAR	Checks whether two numerical values are approximately equal.
+CHECK_THROWS	Checks whether an operation throws an expected exception.
+These helpers make it easier to write and understand the tests.
+Note: Passing the available tests does not prove that the program is free from every possible error. It confirms that the tested cases behaved as expected.
+8. RUNNING THE PROJECT IN VISUAL STUDIO CODE
+The project presentation instructions require members to demonstrate their work directly in Visual Studio Code.
+The following steps can be used during the practical demonstration.
+8.1 Opening the Project
+	Open Visual Studio Code.
+	Select File → Open Folder.
+	Select the Group 20 project repository.
+	Show the different directories and explain their purposes.
+8.2 Demonstrating the Source Code
+Open the following files:
+First: dataset.hpp and dataset.cpp
+Explain how the Dataset class stores, validates and standardizes numerical data.
+Second: similarity.hpp and similarity.cpp
+Explain how similarity values are calculated and how preferences are initialized.
+Third: affinity_propagation.hpp and affinity_propagation.cpp
+Explain the main algorithm, including responsibility, availability, damping and exemplar selection.
+Fourth: evaluation.hpp and evaluation.cpp
+Explain how the number of distinct cluster labels is calculated.
+Fifth: examples/run_example.cpp
+Show how the program creates a dataset, configures the algorithm and obtains clustering results.
+8.3 Building the Project
+Open the VS Code terminal.
+The following commands can be used, depending on the project's current configuration:
+cmake -S . -B build
+This configures the project and creates the build directory.
+Next:
+cmake --build build
+This compiles the project.
+8.4 Running the Example
+For a Windows build where the executable is generated in the build directory, the command may be:
+build run_example.exe
+The example should demonstrate the clustering process and display the results produced by the program.
+8.5 Running the Tests
+Use:
+ctest --test-dir build --output-on-failure
+This runs the tests registered with CTest and displays information about any failures.
+Important: Before the presentation, test these commands on the actual presentation computer. The exact executable location may depend on the generator and CMake configuration.
+9. LIMITATIONS AND POSSIBLE IMPROVEMENTS
+Although the project implements the main Affinity Propagation workflow, there are areas that can be improved.
+9.1 Limitations
+	Memory usage: The algorithm stores several matrices whose sizes increase with the number of data points. This can make it difficult to process very large datasets.
+	CSV handling: The CSV example is intended for simple numerical data and may not support every CSV feature, such as quoted commas.
+	Test coverage: The existing tests cover important operations, but additional tests can be added for more unusual datasets and configurations.
+	Input validation: Additional validation can be considered for invalid configuration values and non-finite numerical inputs.
+	Result presentation: The clustering results could be made easier to understand through improved reporting or visualisation.
+9.2 Possible Future Improvements
+The project could be improved by:
+	Adding more test cases.
+	Improving CSV input handling.
+	Supporting larger datasets more efficiently.
+	Adding visual representations of the clusters.
+	Improving the presentation of the final clustering results.
+	Adding more detailed error messages for invalid input.
+
+10. CONCLUSION
+The project successfully implements the main stages of the Affinity Propagation clustering algorithm using C++17.
+The implementation demonstrates how numerical datasets can be prepared, how similarities can be calculated and how responsibility and availability messages can be used to identify suitable exemplars.
+The project also demonstrates the application of object-oriented programming through the use of separate classes for dataset management, similarity calculations, clustering and evaluation.
+The use of CMake provides an organized build process, while automated tests help check the functionality of the different modules.
+Through this project, the group has gained practical experience in C++ programming, object-oriented design, algorithm implementation, testing and software development.
+The project provides a foundation that can be extended through additional features, improved input handling, more comprehensive tests and visualization of clustering results.
 
